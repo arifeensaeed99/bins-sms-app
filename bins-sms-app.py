@@ -194,7 +194,7 @@ def main():
                                         timer = 4
                                         st.info('Sending Bins Average Levels Report text message to ' + str(result[0][3]) + '...')
                                         
-                                        text_alert('📊 Latest Bins Levels Report for ' + str(result[0][0]) + ', ' + strftime("%m/%d/%Y at %I:%M:%S %p", localtime()) + ":", body, result[0][3], result[0][4])
+                                        text_alert('📊 Latest Bins Levels Report for ' + str(result[0][0]) + ":", body, result[0][3], result[0][4]) # removed + ', ' + strftime("%m/%d/%Y at %I:%M:%S %p UTC", localtime()) due to UTC
                                         
                                         while True:
                                             time.sleep(1)
@@ -207,7 +207,9 @@ def main():
                                 
                                 st.markdown('NOTE: An average of the **most recent 3** Levels per Bin is used in the report text!')
                                 st.caption('Additionally, if you recently logged in and out, give some time for the text to deliver, or log out and log in.')
+                                st.caption('If you just logged in for the first time ever, you need at least one Level in one Bin for the text to be useful!')
                                 st.write(" ")
+                                st.markdown("Begin by selecting the activity Add Bin to add your first Bin if this is your first time ever logging in.")
 
 
                         if st.session_state['current_user'] == username:
@@ -244,8 +246,8 @@ def main():
                                 elif activity == "See Trends":
                                     # Animated Plot
                                     st.subheader('See an Animated Plot of your Bin Levels over time')
-                                    st.info("Please choose a start date, end date, and Bin(s) below. NOTE: If you get errors, make sure you choose dates that the Bin(s) exist(s) in.")
-                                    st.write("More Levels data will smoothen the animation over time!")
+                                    st.info("Please choose a start date, end date, and Bin(s) below. NOTE: If you get errors, make sure you choose **proper** start and end dates that the Bin(s) exist(s) in.")
+                                    st.write("_More Levels data will smoothen the animation over time!_")
                                     res = get_all_bin_dates_data(username)
                                     bins_df = pd.DataFrame(res, columns = ['Bin', 'Datestamp', 'Level'])
 
@@ -258,8 +260,8 @@ def main():
                                     st_datestamp = st.selectbox("What start date would you like to see from?", datestamp_options)
                                     end_datestamp = st.selectbox("What end date would you like to see until?", datestamp_options)
                                     bins = st.multiselect('Which Bin(s) would you like to see?', bin_options)
-                                    if bins:
-                                        if st_datestamp <= end_datestamp:
+                                    if st_datestamp <= end_datestamp:
+                                        if bins:
                                             bins_df = bins_df[bins_df['Bin'].isin(bins)]
                                             bins_df = bins_df[bins_df['Datestamp']>=st_datestamp]
                                             bins_df = bins_df[bins_df['Datestamp']<=end_datestamp]
@@ -270,9 +272,9 @@ def main():
                                             fig.update_layout(width = 800)
                                             st.write(fig)
                                         else:
-                                            st.warning('Please ensure start date is before end date')
+                                            st.warning('Please choose a Bin or Bins') 
                                     else:
-                                        st.warning('Please choose a Bin or Bins') 
+                                        st.warning('Please ensure start date is before end date')
 
                                 elif activity == 'Add Bin':
                                     st.subheader('Add a New Bin')
