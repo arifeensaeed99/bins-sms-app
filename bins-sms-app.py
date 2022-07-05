@@ -150,6 +150,9 @@ def main():
                         st.session_state['current_user'] = ''
 
                 if result:                                   
+                        
+                        create_bins_dates_tables()
+                        
                         if username != st.session_state['current_user']: # first login
                                 
                                 # get averages of most recent 3 Levels per Bin
@@ -476,7 +479,7 @@ def main():
 
         if current_username and current_password:
             if result:
-                st.write(result)
+                # st.write(result)
 
                 st.write("Please use the checkbox(es) below to edit the corresponding field(s) below, and leave checked until the button is pressed:")
 
