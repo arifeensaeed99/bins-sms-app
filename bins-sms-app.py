@@ -12,6 +12,10 @@ import random
 import plotly.express as px
 from time import gmtime, strftime, localtime # 
 
+import requests
+
+from dateutil import tz
+
 from db_bins_fxn import *
 from db_bins_users import *
 
@@ -67,6 +71,30 @@ def email_provider_verifier(email):
             continue
     return False
 
+def is_uni_email(email):
+
+    # Start traversing the string
+    for i in range(len(email)):
+ 
+        if (email[i] == '@'):
+            break
+ 
+    domain = email[i+1: len(email)]
+
+    # print(domain)
+
+    # Send a request to Universities HipoLabs for a domain search, use Get Request and Len of Json (yigitguler)
+    uni_email = requests.get("http://universities.hipolabs.com/search?domain=" + str(domain))
+
+    # print(uni_email.json())
+
+    if len(uni_email.json()):
+        #print('Data is here')
+        return True
+    else:
+        #print('No data here')
+        return False
+
 # identity verification
 def generate_hashes(password):
         return hashlib.sha256(str.encode(password)).hexdigest()
@@ -80,26 +108,6 @@ def verify_hashes(password, hashed_text):
 def main():
     # Title
     st.title('📊 Bins SMS App')
-
-    # Dates
-    year = datetime.date.today().strftime("%Y")
-    month = datetime.date.today().strftime("%B")
-    day = datetime.date.today().strftime("%d")
-    weekday = datetime.date.today().strftime("%A")
-    
-    ending = ''
-    if int(day) < 10:
-        day = day[1]
-    if day == '1' or day == '21' or day == '31':
-        ending = "st"
-    elif day == '2' or day == '22':
-        ending = "nd"
-    elif day == '3' or day == '23':
-        ending = "rd"
-    else:
-        ending = "th"
-
-    st.info("_**{} {}{}, {}**_".format(month, day, ending, year)) # removed weekday
 
     # Menu
     menu = ['About', 'Login', 'Create Account', 'Edit Account']
@@ -125,7 +133,7 @@ def main():
 
         st.latex("**level**")
         st.write("**level** _noun_ lev·​el \ ˈle-vəl \ plural **levels**")
-        st.write("Definition of _level_: : a measurement of the difference of altitude of two points...")
+        st.write("Definition of _level_: a measurement of the difference of altitude of two points...")
         st.write("")
         st.write('_In addition, a Level is an emotion towards how a Bin is going, measured on a scale of 0 to 100, usually with respect to the current moment_')
 
@@ -152,6 +160,42 @@ def main():
                 if result:                                   
                         
                         create_bins_dates_tables()
+
+                        # Time Zone conversion
+                        user_tz = result[0][5]
+                        from_zone = tz.gettz('UTC')
+                        to_zone = tz.gettz(user_tz)
+
+                        # Dates (UTC Heroku -> user timezone) throughout app session
+                        year = datetime.date.today().strftime("%Y")
+                        year = year.replace(tz_info=from_zone)
+                        year = year.astime(to_zone)
+
+                        month = datetime.date.today().strftime("%B")
+                        month = month.replace(tz_info=from_zone)
+                        month = month.astime(to_zone)
+
+                        day = datetime.date.today().strftime("%d")
+                        day = day.replace(tz_info=from_zone)
+                        day = day.astime(to_zone)
+
+                        weekday = datetime.date.today().strftime("%A")
+                        weekday = weekday.replace(tz_info=from_zone)
+                        weekday = weekday.astime(to_zone)
+
+                        ending = ''
+                        if int(day) < 10:
+                            day = day[1]
+                        if day == '1' or day == '21' or day == '31':
+                            ending = "st"
+                        elif day == '2' or day == '22':
+                            ending = "nd"
+                        elif day == '3' or day == '23':
+                            ending = "rd"
+                        else:
+                            ending = "th"
+
+                        st.info("_**{}, {} {}{}, {}**_".format(weekday, month, day, ending, year)) # UTC to local time
                         
                         if username != st.session_state['current_user']: # first login
                                 
@@ -184,6 +228,8 @@ def main():
                                         body += str(row[0]) + ": " + str(round(row[1])) + "\n"
 
                                 # st.write(body)
+
+                                
                         
                                 st.session_state['current_user'] = username
                                 
@@ -191,10 +237,15 @@ def main():
 
                                 with st.empty():
                                         # ensure correct timing
-                                        timer = 4
+                                        timer = 5
                                         st.info('Sending Bins Average Levels Report text message to ' + str(result[0][3]) + '...')
                                         
-                                        text_alert('📊 Latest Bins Levels Report for ' + str(result[0][0]) + ":", body, result[0][3], result[0][4]) # removed + ', ' + strftime("%m/%d/%Y at %I:%M:%S %p UTC", localtime()) due to UTC
+                                        # Time Zone conversion here for closeness to true time
+                                        utc = strftime("%m/%d/%Y at %I:%M:%S %p", localtime()) # UTC in Heroku
+                                        utc = utc.replace(tzinfo = from_zone)
+                                        user_time = utc.astimezone(to_zone)
+
+                                        text_alert('📊 Latest Bins 3 Levels Report for ' + str(result[0][0]) + ",  " + str(user_time)  +  ":", body, result[0][3], result[0][4])
                                         
                                         while True:
                                             time.sleep(1)
@@ -205,11 +256,11 @@ def main():
                                                 st.success('Text sent!')
                                                 break            
                                 
-                                st.markdown('NOTE: An average of the **most recent 3** Levels per Bin is used in the report text!')
-                                st.caption('Additionally, if you recently logged in and out, give some time for the text to deliver, or log out and log in.')
-                                st.caption('If you just logged in for the first time ever, you need at least one Level in one Bin for the text to be useful!')
+                                st.write('NOTE: An average of the **most recent 3** Levels per Bin is used in the report text!')
+                                st.write('Additionally, if you recently logged in and out, give some time for the text to deliver, or log out and log in.')
+                                st.info('**If you just logged in for the first time ever, you need at least one Level in one Bin for the text message to be useful.**')
                                 st.write(" ")
-                                st.markdown("Begin by selecting the activity Add Bin to add your first Bin if this is your first time ever logging in.")
+                                st.info("**Begin by selecting the activity Add Bin to add your first Bin if this is your first time ever logging in.**")
 
 
                         if st.session_state['current_user'] == username:
@@ -238,15 +289,20 @@ def main():
                                         b = b[0]
                                         st.latex(b)
                                         bin_level = st.slider("What Level do you feel like the Bin '{}' is at right now?".format(b), 0, 100)
-                                        bin_datestamp = strftime("%Y-%m-%d %H:%M:%S", localtime())
+
+                                        # UTC Heroku to local user timezone, Time Zone conversion here for closeness to true time
+                                        bin_datestamp = strftime("%Y-%m-%d %H:%M:%S", localtime())  # UTC in Heroku
+                                        bin_datestamp = bin_datestamp.replace(tzinfo = from_zone)
+                                        bin_datestamp = bin_datestamp.astimezone(to_zone)
+
                                         if st.button('Add new Level data for {}'.format(b)):
                                             add_bin_dates(bin_datestamp, bin_level, username, b)
-                                            st.success('Added Level data for Bin "{}" '.format(b) + str(random.choice(emojis)))
+                                            st.success('Added Level data for Bin "{}" '.format(b) + str(random.choice(emojis))) # add machine learning later for proper emoji to use
                                 
                                 elif activity == "See Trends":
                                     # Animated Plot
                                     st.subheader('See an Animated Plot of your Bin Levels over time')
-                                    st.info("Please choose a start date, end date, and Bin(s) below. NOTE: If you get errors, make sure you choose **proper** start and end dates that the Bin(s) exist(s) in.")
+                                    st.info("Please choose a start date, end date, and Bin below. NOTE: If you get errors, make sure you choose **proper** start and end dates that the Bin exists in.")
                                     st.write("_More Levels data will smoothen the animation over time!_")
                                     res = get_all_bin_dates_data(username)
                                     bins_df = pd.DataFrame(res, columns = ['Bin', 'Datestamp', 'Level'])
@@ -256,23 +312,29 @@ def main():
                                     st.write(bins_df)
 
                                     bin_options = bins_df['Bin'].unique().tolist()
-                                    datestamp_options = bins_df['Datestamp'].unique().tolist()
+
+                                    stamps = st.checkbox('Select this box if you want to see trends based on dates **and timestamps**. Otherwise, only dates will appear as options.')
+                                    if stamps:
+                                        date_type = 'Datestamp'
+                                    else:
+                                        date_type = 'Date'
+                                    datestamp_options = bins_df[date_type].unique().tolist()
                                     st_datestamp = st.selectbox("What start date would you like to see from?", datestamp_options)
                                     end_datestamp = st.selectbox("What end date would you like to see until?", datestamp_options)
-                                    bins = st.multiselect('Which Bin(s) would you like to see?', bin_options)
+                                    bins = st.select('Which Bin would you like to see?', bin_options) # removed multislect
                                     if st_datestamp <= end_datestamp:
                                         if bins:
                                             bins_df = bins_df[bins_df['Bin'].isin(bins)]
-                                            bins_df = bins_df[bins_df['Datestamp']>=st_datestamp]
-                                            bins_df = bins_df[bins_df['Datestamp']<=end_datestamp]
-                                            fig = px.bar(bins_df, x  = "Bin", y = "Level", color = "Bin", range_y = [-10, 110], animation_frame = "Datestamp", animation_group = 'Bin', range_x = [-len(bins),len(bins)*2])
+                                            bins_df = bins_df[bins_df[date_type]>=st_datestamp]
+                                            bins_df = bins_df[bins_df[date_type]<=end_datestamp]
+                                            fig = px.bar(bins_df, x  = "Bin", y = "Level", color = "Bin", range_y = [-10, 110], animation_frame = date_type, animation_group = 'Bin', range_x = [-len(bins),len(bins)*2])
                                             fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 200
                                             fig.layout.updatemenus[0].buttons[0].args[1]['transition']['duration'] = 200/6
                                             fig.update_geos(projection_type="equirectangular", visible=True, resolution=110)
                                             fig.update_layout(width = 800)
                                             st.write(fig)
                                         else:
-                                            st.warning('Please choose a Bin or Bins') 
+                                            st.warning('Please choose a Bin') 
                                     else:
                                         st.warning('Please ensure start date is before end date')
 
@@ -280,8 +342,17 @@ def main():
                                     st.subheader('Add a New Bin')
                                     
                                     # Initial
-                                    new_bin_date = strftime("%Y-%m-%d %H:%M:%S", localtime())  
-                                    st.write('New Bin initial datestamp:', strftime("%Y-%m-%d at %I:%M:%S %p", localtime()))
+
+                                    # UTC Heroku to local user timezone, Time Zone conversion here for closeness to true time
+                                    new_bin_date = strftime("%Y-%m-%d %H:%M:%S", localtime())  # UTC in Heroku
+                                    new_bin_date = new_bin_date.replace(tzinfo = from_zone)
+                                    new_bin_date = new_bin_date.astimezone(to_zone)
+
+                                    display_bin_date = strftime("%Y-%m-%d %I:%M:%S %p", localtime())  # UTC in Heroku
+                                    display_bin_date = display_bin_date.replace(tzinfo = from_zone)
+                                    display_bin_date = display_bin_date.astimezone(to_zone)
+
+                                    st.write('New Bin initial datestamp:', display_bin_date)
                                     new_bin_status = False 
                                     st.write('New Bin initial completion status:', new_bin_status)
                                     
@@ -330,6 +401,11 @@ def main():
                                         new_bin = st.text_area("Enter a new name for the Bin:", bin)
                                         st.caption('Current ideal completion date: ' + str(bin_completion_date))
                                         new_bin_completion_date = st.date_input('What is the new ideal completion date of this Bin?')
+
+                                        # UTC Heroku to local user timezone, Time Zone conversion here for closeness to true time
+                                        # new_bin_completion_date = strftime("%Y-%m-%d %H:%M:%S", localtime())  # UTC in Heroku
+                                        new_bin_completion_date = new_bin_completion_date.replace(tzinfo = from_zone)
+                                        new_bin_completion_date = new_bin_completion_date.astimezone(to_zone)
                                         
                                         if not bin_status:
                                             st.caption('Current Bin completion status: False')
@@ -337,9 +413,14 @@ def main():
                                             st.caption('Current Bin completion status: True')
                                         new_bin_status = st.checkbox('Is this Bin now completed?', [True, False])
 
-                                
                                         if new_bin:
-                                            if str(new_bin_completion_date) > strftime("%Y-%m-%d %H:%M:%S", localtime()):
+                                            
+                                            # UTC Heroku to local user timezone, Time Zone conversion here for closeness to true time
+                                            current_datetime = strftime("%Y-%m-%d %H:%M:%S", localtime())  # UTC in Heroku
+                                            current_datetime = current_datetime.replace(tzinfo = from_zone)
+                                            current_datetime = current_datetime.astimezone(to_zone)
+
+                                            if str(new_bin_completion_date) > current_datetime:
                                                         if st.button('Update Bin Details'):
                                                             update_bin_details(new_bin, new_bin_completion_date, new_bin_status, username, bin)
                                                             st.success('Successfully updated the details for the Bin: ' + str(new_bin))
@@ -377,15 +458,29 @@ def main():
                 else:
                     st.warning('Incorrect username or password, please try again...')
         else:
-                st.session_state['current_user'] = ''                               
+                st.session_state['current_user'] = '' 
 
+                # Postgres data migration at log-out for LT storage
+                # postgresql-concave-71120
 
+                #import the relevant sql library 
+                from sqlalchemy import create_engine
+                # link to your database
+                engine = create_engine('postgresql-concave-71120', echo = False)
+                # attach the data frame (df) to the database with a name of the 
+                # table; the name can be whatever you like
+                
+                users = pd.DataFrame(view_all_bins_users(), columns = ['username', 'password', 'email', 'phone', 'carrier', 'timezone'])
 
-        # slider
-        # datetime
-        # random
-        # if
+                bins = pd.DataFrame(view_all_bins_table_data(), columns = ['username', 'bin', 'bin_completion_date', 'bin_status'])
+                bins_dates = pd.DataFrame(view_all_bin_dates_table_data(), columns = ['bin_datestamp', 'bin_level', 'username', 'bin'])
 
+                users.to_sql('users_bins_table', con = engine, if_exists='append')
+
+                bins.to_sql('bins_table', con = engine, if_exists='append')
+                bins_dates.to_sql('bin_dates_table', con = engine, if_exists='append')
+                # run a quick test // add to if_exists??
+                # print(engine.execute(“SELECT * FROM phil_nlp”).fetchone())                              
 
     elif choice == "Create Account":
 
@@ -422,7 +517,7 @@ def main():
                                                         new_email = st.text_input('Email address')
                                                         if new_email: 
                                                             if '@' in new_email:
-                                                                if email_provider_verifier(new_email):
+                                                                if email_provider_verifier(new_email) or is_uni_email(new_email):
                                                                     new_phone = st.text_input('Phone number (digits only)')
 
                                                                     if new_phone:
@@ -434,14 +529,21 @@ def main():
                                                                             if not res:
                                                                                     new_carrier = st.radio("Your Carrier (US)", ["AT&T", "Boost Mobile", "Cricket Wireless",  "Google Project Fi",  "Republic Wireless","Sprint", "Straight Talk", "T-Mobile",
                                                                         "Ting", "U.S. Cellular", "Verizon", "Virgin Mobile" ])
-                                                                                    st.success('Everything looks good, select your Carrier and press Submit to create an account!')
-                                                                                    if st.button('Submit'):
-                                                                                            st.empty()
-                                                                                            create_users_bins_table()
-                                                                                            hashed_new_password = generate_hashes(new_password)
-                                                                                            add_users_bins_data(new_username, hashed_new_password, new_email, new_phone, new_carrier)
-                                                                                            st.success('You have successfully created a new account!')
-                                                                                            st.info('Login to get started with the Bins SMS App from the Sidebar!')
+                                                                                    if new_carrier:
+                                                                                        new_timezone = st.selectbox("Please select a timezone:", set(datetime.pytz.all_timezeones_set)) # list of all timezeones
+                                                                                        if new_timezone:    
+                                                                                            st.success('Everything looks good, press Submit to create an account!')
+                                                                                            if st.button('Submit'):
+                                                                                                    st.empty()
+                                                                                                    create_users_bins_table()
+                                                                                                    hashed_new_password = generate_hashes(new_password)
+                                                                                                    add_users_bins_data(new_username, hashed_new_password, new_email, new_phone, new_carrier, new_timezone)
+                                                                                                    st.success('You have successfully created a new account!')
+                                                                                                    st.info('Login to get started with the Bins SMS App from the Sidebar!')
+                                                                                        else:
+                                                                                            st.warning('Please select a timezone')
+                                                                                    else:
+                                                                                        st.warning("Please select a carrier")
                                                                             else:
                                                                                 st.warning("Please enter a phone number with digits only")
                                                                         else:
@@ -449,7 +551,7 @@ def main():
                                                                     else:
                                                                         st.warning("Enter a phone number")
                                                                 else:
-                                                                    st.warning('Email must have a real provider domain')
+                                                                    st.warning('Email must have a real provider domain (personal or university)')
                                                             else:
                                                                 st.warning('@ must be in email')
                                                         else:
@@ -605,16 +707,39 @@ def main():
                 # Carrier
                 if st.checkbox('Edit Carrier'):
                     st.text("Current carrier: " + str(result[0][4]))
-                    new_carrier = st.radio("Select a new Carrier (US)", ["AT&T", "Boost Mobile", "Cricket Wireless",  "Google Project Fi",  "Republic Wireless","Sprint", "Straight Talk", "T-Mobile",
+                    carrier = st.radio("Select a new Carrier (US)", ["AT&T", "Boost Mobile", "Cricket Wireless",  "Google Project Fi",  "Republic Wireless","Sprint", "Straight Talk", "T-Mobile",
                                                                             "Ting", "U.S. Cellular", "Verizon", "Virgin Mobile" ])
+                    if carrier:
+                        if carrier != str(result[0][4]):
+                            new_carrier = carrier
+                            st.success('New carrier looks good')
+                        else:
+                            st.warning("New carrier cannot be the same as previous")
+                    else:
+                        st.warning('Please select a carrier')
                 else:
                     new_carrier = result[0][4] # same as old carrier
+
+                # Carrier
+                if st.checkbox('Edit Timezone'):
+                    st.text("Current timezone: " + str(result[0][5]))
+                    timezone = st.selectbox("Please select a new timezone:", set(datetime.pytz.all_timezeones_set)) 
+                    if timezone:
+                        if timezone != str(result[0][5]):
+                            new_timezone = timezone
+                            st.success('New timezone looks good')
+                        else:
+                            st.warning('New timezone cannot be the same as previous')
+                    else:
+                        st.warning('Please enter a new timezone')
+                else:
+                    new_timezone = result[0][5] # same as old timezone
                 
                 st.write("-----")
                 if st.button('Save all user account edits'):
                     st.success('You have successfully edited the account (now) with a username of ' + str(new_username))
                     st.info('Please login again with your new credenitals from the Sidebar to continue using the Bins SMS App')
-                    update_bins_user_data(new_username, new_password, new_email, new_phone, new_carrier, current_username, hashed_current_password, result[0][2], result[0][3], result[0][4])
+                    update_bins_user_data(new_username, new_password, new_email, new_phone, new_carrier, new_timezone, current_username, hashed_current_password, result[0][2], result[0][3], result[0][4], result[0][5])
                 
             else:
                 st.warning("No such username/password match, please re-try")

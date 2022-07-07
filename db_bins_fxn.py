@@ -1,11 +1,16 @@
 import sqlite3
-conn = sqlite3.connect("bins_data.db")
+import psycopg2
+import os
+
+DATABASE_URL = os.environ.get('postgresql-concave-71120')
+conn = psycopg2.connect(DATABASE_URL) 
 c = conn.cursor()
 
 # Database
 
 # c.execute('DROP TABLE bins_table')
 # c.execute('DROP TABLE bin_dates_table')
+
 
 # Table
 def create_bins_dates_tables():
@@ -86,3 +91,15 @@ def delete_bins(username, bin):
     c.execute('DELETE FROM bin_dates_table WHERE bin = ? AND username = ?', (bin, username))
     c.execute('DELETE FROM bins_table WHERE bin = ? AND username = ?', (bin, username))
     conn.commit()
+
+# Get ALL bins_table data 
+def view_all_bins_table_data():
+    c.execute('SELECT * FROM bins_table')
+    data = c.fetchall()
+    return data
+
+# Get ALL bin_dates_table data 
+def view_all_bin_dates_table_data():
+    c.execute('SELECT * FROM bin_dates_table')
+    data = c.fetchall()
+    return data
