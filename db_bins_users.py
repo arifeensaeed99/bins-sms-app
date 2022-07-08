@@ -16,11 +16,11 @@ c = conn.cursor()
 def create_users_bins_table():
     c.execute('CREATE TABLE IF NOT EXISTS users_bins_table(username TEXT UNIQUE, password TEXT, email TEXT, phone TEXT UNIQUE, carrier TEXT, timezone TEXT)') # not null
 
-    c.commit()
+    c.close()
 
 def add_users_bins_data(username, password, email, phone, carrier, timezone):
     c.execute('INSERT INTO users_bins_table(username, password, email, phone, carrier, timezone) VALUES (?,?,?,?,?, ?)', (username, password, email, phone, carrier, timezone))
-    c.commit()
+    c.close()
 
 def login_bins_user(username, password):
     c.execute('SELECT * FROM users_bins_table WHERE username = ? AND password = ?', (username, password))

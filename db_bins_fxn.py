@@ -19,18 +19,18 @@ def create_bins_dates_tables():
     c.execute('PRAGMA foreign_keys = ON')
     c.execute('CREATE TABLE IF NOT EXISTS bin_dates_table(bin_datestamp DATE, bin_level INTEGER, username TEXT, bin TEXT, FOREIGN KEY(username, bin) REFERENCES bins_table(username, bin) ON UPDATE CASCADE)')
 
-    c.commit()
+    c.close()
 
 # init for both at once
 def add_bin(username, bin, bin_datestamp, bin_level, bin_completion_date, bin_status):
     c.execute('INSERT INTO bins_table(username, bin, bin_completion_date, bin_status) VALUES (?,?,?,?)', (username, bin, bin_completion_date, bin_status))
     c.execute('INSERT INTO bin_dates_table(bin_datestamp, bin_level, username, bin) VALUES (?,?,?,?)', (bin_datestamp, bin_level, username, bin))
     
-    c.commit()
+    c.close()
 
 def add_bin_dates(bin_datestamp, bin_level, username, bin):
     c.execute('INSERT INTO bin_dates_table(bin_datestamp, bin_level, username, bin) VALUES (?,?,?,?)', (bin_datestamp, bin_level, username, bin))
-    c.commit()
+    c.close()
 
 #def view_all_bins_data(username):
 #    c.execute('SELECT bin, bin_date, bin_level, bin_completion_date, bin_status FROM bins_table WHERE username = "{}"'.format(username))
@@ -83,7 +83,7 @@ def get_bin_dates_data(bin, username):
 # only changing bin name, completion date, status (Details)
 def update_bin_details(new_bin, new_bin_completion_date, new_bin_status, username, bin):
     c.execute('UPDATE bins_table SET bin = ?, bin_completion_date = ?, bin_status = ? WHERE username = ? and bin = ?', (new_bin, new_bin_completion_date, new_bin_status, username, bin))
-    c.commit()
+    c.close()
     data = c.fetchall()
     return data
 
@@ -93,7 +93,7 @@ def update_bin_details(new_bin, new_bin_completion_date, new_bin_status, usernam
 def delete_bins(username, bin):
     c.execute('DELETE FROM bin_dates_table WHERE bin = ? AND username = ?', (bin, username))
     c.execute('DELETE FROM bins_table WHERE bin = ? AND username = ?', (bin, username))
-    c.commit()
+    c.close()
 
 # Get ALL bins_table data 
 def view_all_bins_table_data():
