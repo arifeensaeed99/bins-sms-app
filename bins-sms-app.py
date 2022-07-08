@@ -10,6 +10,7 @@ import hashlib
 import time
 import random
 import plotly.express as px
+import psycopg2
 from time import gmtime, strftime, localtime # 
 
 import requests
