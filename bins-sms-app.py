@@ -688,6 +688,7 @@ def main():
 
                 st.write("------")
 
+
                 # Carrier
                 if st.checkbox('Edit Carrier'):
                     st.text("Current carrier: " + str(result[0][4]))
