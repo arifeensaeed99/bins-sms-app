@@ -1,7 +1,10 @@
 import sqlite3
-conn = sqlite3.connect("data.db")
-c = conn.cursor()
+import psycopg2
+import os
 
+DATABASE_URL = os.environ.get('postgresql-concave-71120')
+conn = psycopg2.connect(DATABASE_URL) 
+c = conn.cursor()
 
 # Database
 
