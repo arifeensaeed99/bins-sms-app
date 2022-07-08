@@ -510,7 +510,7 @@ def main():
                                                                                     new_carrier = st.radio("Your Carrier (US)", ["AT&T", "Boost Mobile", "Cricket Wireless",  "Google Project Fi",  "Republic Wireless","Sprint", "Straight Talk", "T-Mobile",
                                                                         "Ting", "U.S. Cellular", "Verizon", "Virgin Mobile" ])
                                                                                     if new_carrier:
-                                                                                        new_timezone = st.selectbox("Please select a timezone:", set(pytz.all_timezones_set)) # list of all timezeones
+                                                                                        new_timezone = st.selectbox("Please select a timezone:", pytz.all_timezones_set) # list of all timezeones
                                                                                         if new_timezone:    
                                                                                             st.success('Everything looks good, press Submit to create an account!')
                                                                                             if st.button('Submit'):
@@ -704,7 +704,7 @@ def main():
                 # Carrier
                 if st.checkbox('Edit Timezone'):
                     st.text("Current timezone: " + str(result[0][5]))
-                    timezone = st.selectbox("Please select a new timezone:", set(pytz.all_timezones_set)) 
+                    timezone = st.selectbox("Please select a new timezone:", pytz.all_timezones_set) 
                     if timezone:
                         if timezone != str(result[0][5]):
                             new_timezone = timezone
