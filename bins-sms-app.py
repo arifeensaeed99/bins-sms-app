@@ -121,7 +121,7 @@ def main():
         # Descriptions
         st.info('This application exists to monitor your Levels and Bins _(defined below)_ daily and over time, and sends you a text message with a Report each time you log-in.')
         st.write("")
-        
+
 
         st.latex(" Merriam-Webster:")
         st.write("")
@@ -142,12 +142,15 @@ def main():
         st.write("")
         st.write("_______________")
         st.write("")
-        st.write("Bearing these definitions in mind, please log in from the left, or, if this is your first time, sign up by providing key information, such as a username, email and **a phone number***.")
+        st.write("Bearing these definitions in mind, please log in from the left, or, if this is your first time, sign up by providing key information, such as a username, email and **a phone number*** so that your data may be securely stored.")
         st.caption("_*Please note that the app currently only works for US numbers_")
 
         st.write("")
         st.write("")
-        st.write("Made with <3 by Arifeen Saeed | Masters Project #2")
+        st.write("")
+        st.write("")
+        st.write("")
+        st.write("Made with 🧡  by Arifeen Saeed | Masters Project #2")
 
     elif choice == 'Login':
         username = st.sidebar.text_input("Username")
@@ -465,7 +468,7 @@ def main():
                     st.warning('Incorrect username or password, please try again...')
         else:
                 st.session_state['current_user'] = '' 
-                end_bins_users_session()                          
+                # end_bins_users_session()                          
 
     elif choice == "Create Account":
 
@@ -574,7 +577,7 @@ def main():
             if result:
                 # st.write(result)
 
-                st.write("Please use the checkbox(es) below to edit the corresponding field(s) below, and leave checked until the button is pressed:")
+                st.warning("Please use the checkbox(es) below to edit the corresponding field(s) below, and leave checked until the button is pressed. Please only leave boxes checked if you have edits!:")
 
                 special_chars = {'~', ':', "'", '+', '[', '\\', '@', '^', '{', '%', '(', '-', '"', '*', '|', ',', '&', '<', '`', '}', '.', '_', '=', ']', '!', '>', ';', '?', '#', '$', ')', '/'}
 
