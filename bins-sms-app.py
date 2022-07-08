@@ -106,29 +106,6 @@ def verify_hashes(password, hashed_text):
                 return False
 
 def main():
-    # Postgres data migration at init for LT storage
-    # postgresql-concave-71120
-
-    #import the relevant sql library 
-    from sqlalchemy import create_engine
-    # link to your database
-    engine = create_engine('postgresql-concave-71120', echo = False)
-    # attach the data frame (df) to the database with a name of the 
-    # table; the name can be whatever you like
-    
-    users = pd.DataFrame(view_all_bins_users(), columns = ['username', 'password', 'email', 'phone', 'carrier', 'timezone'])
-
-    bins = pd.DataFrame(view_all_bins_table_data(), columns = ['username', 'bin', 'bin_completion_date', 'bin_status'])
-    bins_dates = pd.DataFrame(view_all_bin_dates_table_data(), columns = ['bin_datestamp', 'bin_level', 'username', 'bin'])
-
-    users.to_sql('users_bins_table', con = engine, if_exists='append')
-
-    bins.to_sql('bins_table', con = engine, if_exists='append')
-    bins_dates.to_sql('bin_dates_table', con = engine, if_exists='append')
-    # run a quick test // add to
-    # print(engine.execute(“SELECT * FROM phil_nlp”).fetchone())   
-    
-    
     # Title
     st.title('📊 Bins SMS App')
 
@@ -481,29 +458,7 @@ def main():
                 else:
                     st.warning('Incorrect username or password, please try again...')
         else:
-                st.session_state['current_user'] = '' 
-
-                # Postgres data migration at logout for LT storage
-                # postgresql-concave-71120
-
-                #import the relevant sql library 
-                from sqlalchemy import create_engine
-                # link to your database
-                engine = create_engine('postgresql-concave-71120', echo = False)
-                # attach the data frame (df) to the database with a name of the 
-                # table; the name can be whatever you like
-                
-                users = pd.DataFrame(view_all_bins_users(), columns = ['username', 'password', 'email', 'phone', 'carrier', 'timezone'])
-
-                bins = pd.DataFrame(view_all_bins_table_data(), columns = ['username', 'bin', 'bin_completion_date', 'bin_status'])
-                bins_dates = pd.DataFrame(view_all_bin_dates_table_data(), columns = ['bin_datestamp', 'bin_level', 'username', 'bin'])
-
-                users.to_sql('users_bins_table', con = engine, if_exists='append')
-
-                bins.to_sql('bins_table', con = engine, if_exists='append')
-                bins_dates.to_sql('bin_dates_table', con = engine, if_exists='append')
-                # run a quick test // add to
-                # print(engine.execute(“SELECT * FROM phil_nlp”).fetchone())                              
+                st.session_state['current_user'] = ''                           
 
     elif choice == "Create Account":
 
