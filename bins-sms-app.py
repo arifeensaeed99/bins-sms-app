@@ -519,6 +519,16 @@ def main():
                                                                                                     st.empty()
                                                                                                     create_users_bins_table()
                                                                                                     hashed_new_password = generate_hashes(new_password)
+
+                                                                                                    st.info(new_username)
+                                                                                                    st.info(hashed_new_password)
+                                                                                                    st.info(new_email)
+                                                                                                    st.info(new_phone)
+                                                                                                    st.info(new_carrier)
+                                                                                                    st.info(new_timezone)
+
+
+
                                                                                                     add_users_bins_data(new_username, hashed_new_password, new_email, new_phone, new_carrier, new_timezone)
                                                                                                     st.success('You have successfully created a new account!')
                                                                                                     st.info('Login to get started with the Bins SMS App from the Sidebar!')
