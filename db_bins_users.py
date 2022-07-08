@@ -12,7 +12,7 @@ database = 'dciocdjj8v1tq5'
 conn = psycopg2.connect(database=database, user=user, password=password, host = host, port = port)
 c = conn.cursor()
 
-conn.setAutoCommit(True) # for errors
+conn.set_session(autocommit=True) # for errors
 
 # Table
 def create_users_bins_table():
