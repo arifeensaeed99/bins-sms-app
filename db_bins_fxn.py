@@ -7,7 +7,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 import os
 # link to your database
-engine = create_engine(os.getenv('postgres://kkrxhdcnukwpky:b00307276acd85718b22958bc86632f45018449551928445371c2e38c0d9b379@ec2-44-205-41-76.compute-1.amazonaws.com:5432/dciocdjj8v1tq5'))
+engine = create_engine(os.getenv('postgresql-concave-71120'))
 db = scoped_session(sessionmaker(bind = engine))
 # attach the data frame (df) to the database with a name of the 
 # table; the name can be whatever you like
