@@ -647,7 +647,7 @@ def main():
                         if email:
                             if email != result[0][2]:
                                 if '@' in email:
-                                    if email_provider_verifier(email):
+                                    if email_provider_verifier(email) or is_uni_email(new_email):
                                         st.success('New email looks good')
                                         new_email = email
                                     else:
@@ -704,7 +704,9 @@ def main():
                 else:
                     new_carrier = result[0][4] # same as old carrier
 
-                # Carrier
+                st.write("------")
+
+                # Timezone
                 if st.checkbox('Edit Timezone'):
                     st.text("Current timezone: " + str(result[0][5]))
                     t = list(pytz.all_timezones_set)
