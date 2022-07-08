@@ -1,12 +1,6 @@
-# Postgres data migration for LT storage
-# postgresql-concave-71120
+# Postgres data for for LT storage
 
-#import the relevant sql library 
-import sqlalchemy
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
-import os
-
+#import the relevant libraries
 import psycopg2
 
 user = 'kkrxhdcnukwpky'
@@ -18,37 +12,6 @@ database = 'dciocdjj8v1tq5'
 conn = psycopg2.connect(database=database, user=user, password=password, host = host, port = port)
 c = conn.cursor()
 
-# link to your database
-#engine = create_engine(os.getenv(['postgresql-concave-71120']))
-# db = scoped_session(sessionmaker(bind = engine))
-# attach the data frame (df) to the database with a name of the 
-# table; the name can be whatever you like
-
-# users = pd.DataFrame(view_all_bins_users(), columns = ['username', 'password', 'email', 'phone', 'carrier', 'timezone'])
-
-# bins = pd.DataFrame(view_all_bins_table_data(), columns = ['username', 'bin', 'bin_completion_date', 'bin_status'])
-# bins_dates = pd.DataFrame(view_all_bin_dates_table_data(), columns = ['bin_datestamp', 'bin_level', 'username', 'bin'])
-
-# users.to_sql('users_bins_table', con = engine, if_exists='append')
-
-# bins.to_sql('bins_table', con = engine, if_exists='append')
-# bins_dates.to_sql('bin_dates_table', con = engine, if_exists='append')
-# run a quick test // add to
-# print(engine.execute(“SELECT * FROM phil_nlp”).fetchone())    
-
-# db.commit()
-
-import sqlite3
-# import psycopg
-
-# DATABASE_URL = os.environ.get('postgresql-concave-71120')
-# conn = psycopg.connect(DATABASE_URL) 
-# c = conn.cursor()
-
-# Database
-# c.execute('DROP TABLE users_bins_table')
-
-    
 # Table
 def create_users_bins_table():
     c.execute('CREATE TABLE IF NOT EXISTS users_bins_table(username TEXT UNIQUE, password TEXT, email TEXT, phone TEXT UNIQUE, carrier TEXT, timezone TEXT)') # not null
