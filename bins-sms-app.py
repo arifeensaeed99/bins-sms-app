@@ -503,6 +503,7 @@ def main():
                                                                         if len(new_phone) >= 10: #US
                                                                             
                                                                             invalids = ['-', '(', ')', '+', ' ']
+                                                                            invalids += special_chars
                                                                             res = [i for i in invalids if(i in new_phone)]
                                                                             
                                                                             if not res:
@@ -665,6 +666,7 @@ def main():
                         if phone != result[0][3]:
                             if len(phone) >= 10: # US
                                 invalids = ['-', '(', ')', '+', ' ']
+                                invalids += special_chars
                                 res = [i for i in invalids if(i in phone)]
                                 if not res:
                                     st.success("New phone looks good")
