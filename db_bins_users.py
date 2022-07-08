@@ -9,9 +9,10 @@ host = 'ec2-44-205-41-76.compute-1.amazonaws.com'
 port = '5432'
 database = 'dciocdjj8v1tq5'
 
-
 conn = psycopg2.connect(database=database, user=user, password=password, host = host, port = port)
 c = conn.cursor()
+
+conn.setAutoCommit(True) # for errors
 
 # Table
 def create_users_bins_table():
@@ -38,5 +39,11 @@ def update_bins_user_data(new_username, new_password, new_email, new_phone, new_
     c.execute("UPDATE users_bins_table SET username = %s, password = %s, email = %s, phone = %s, carrier = %s, timezone = %s WHERE username = %s and password = %s and email = %s and phone = %s and carrier = %s and timezone = %s;", (new_username, new_password, new_email, new_phone, new_carrier, new_timezone, username, password, email, phone, carrier, timezone))
     
     conn.commit()
+
+def end_bins_users_session():
+    c.close()
+
+    conn.close()
+
     
     

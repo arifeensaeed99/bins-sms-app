@@ -3,7 +3,6 @@
 #import the relevant libraries
 import psycopg2
 
-
 user = 'kkrxhdcnukwpky'
 password = 'b00307276acd85718b22958bc86632f45018449551928445371c2e38c0d9b379'
 host = 'ec2-44-205-41-76.compute-1.amazonaws.com'
@@ -13,6 +12,8 @@ database = 'dciocdjj8v1tq5'
 conn = psycopg2.connect(database=database, user=user, password=password, host = host, port = port)
 c = conn.cursor()
 
+
+conn.setAutoCommit(True) # for errors
 
 # Table
 def create_bins_dates_tables():
@@ -33,6 +34,7 @@ def add_bin_dates(bin_datestamp, bin_level, username, bin):
     c.execute("INSERT INTO bin_dates_table(bin_datestamp, bin_level, username, bin) VALUES (%s,%s,%s,%s);", (bin_datestamp, bin_level, username, bin))
 
     conn.commit()
+
 
 #def view_all_bins_data(username):
 #    c.execute('SELECT bin, bin_date, bin_level, bin_completion_date, bin_status FROM bins_table WHERE username = "{}"'.format(username))

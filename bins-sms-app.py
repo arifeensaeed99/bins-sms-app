@@ -119,8 +119,9 @@ def main():
         st.subheader('About')
         
         # Descriptions
-        st.write('This application exists to monitor your Levels and Bins _(defined below)_ daily and over time, and sends you a text message with a Report each time you log-in.')
+        st.info('This application exists to monitor your Levels and Bins _(defined below)_ daily and over time, and sends you a text message with a Report each time you log-in.')
         st.write("")
+        
 
         st.latex(" Merriam-Webster:")
         st.write("")
@@ -143,6 +144,10 @@ def main():
         st.write("")
         st.write("Bearing these definitions in mind, please log in from the left, or, if this is your first time, sign up by providing key information, such as a username, email and **a phone number***.")
         st.caption("_*Please note that the app currently only works for US numbers_")
+
+        st.write("")
+        st.write("")
+        st.write("Made with <3 by Arifeen Saeed | Masters Project #2")
 
     elif choice == 'Login':
         username = st.sidebar.text_input("Username")
@@ -459,7 +464,8 @@ def main():
                 else:
                     st.warning('Incorrect username or password, please try again...')
         else:
-                st.session_state['current_user'] = ''                           
+                st.session_state['current_user'] = '' 
+                end_bins_users_session()                          
 
     elif choice == "Create Account":
 
@@ -728,7 +734,7 @@ def main():
                 st.write("-----")
                 if st.button('Save all user account edits'):
                     st.success('You have successfully edited the account (now) with a username of ' + str(new_username))
-                    st.info('Please login again with your new credenitals from the Sidebar to continue using the Bins SMS App')
+                    st.info('Please login again with your updated credenitals from the Sidebar to continue using the Bins SMS App')
                     update_bins_user_data(new_username, new_password, new_email, new_phone, new_carrier, new_timezone, current_username, hashed_current_password, result[0][2], result[0][3], result[0][4], result[0][5])
                 
             else:
