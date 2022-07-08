@@ -21,7 +21,6 @@ def create_bins_dates_tables():
     c.execute("CREATE TABLE IF NOT EXISTS bin_dates_table(bin_datestamp DATE, bin_level INTEGER, username TEXT, bin TEXT, FOREIGN KEY(username, bin) REFERENCES bins_table(username, bin) ON UPDATE CASCADE);")
 
     conn.commit()
-    c.close()
 
 # init for both at once
 def add_bin(username, bin, bin_datestamp, bin_level, bin_completion_date, bin_status):
@@ -29,13 +28,11 @@ def add_bin(username, bin, bin_datestamp, bin_level, bin_completion_date, bin_st
     c.execute("INSERT INTO bin_dates_table(bin_datestamp, bin_level, username, bin) VALUES (%s,%s,%s,%s);", (bin_datestamp, bin_level, username, bin))
 
     conn.commit()
-    c.close()
 
 def add_bin_dates(bin_datestamp, bin_level, username, bin):
     c.execute("INSERT INTO bin_dates_table(bin_datestamp, bin_level, username, bin) VALUES (%s,%s,%s,%s);", (bin_datestamp, bin_level, username, bin))
 
     conn.commit()
-    c.close()
 
 #def view_all_bins_data(username):
 #    c.execute('SELECT bin, bin_date, bin_level, bin_completion_date, bin_status FROM bins_table WHERE username = "{}"'.format(username))
@@ -90,7 +87,6 @@ def update_bin_details(new_bin, new_bin_completion_date, new_bin_status, usernam
     c.execute("UPDATE bins_table SET bin = %s, bin_completion_date = %s, bin_status = %s WHERE username = %s and bin = %s;", (new_bin, new_bin_completion_date, new_bin_status, username, bin))
     data = c.fetchall()
     conn.commit()
-    c.close()
     return data
 
 # delete all bin_dates and bin_details
@@ -98,7 +94,6 @@ def delete_bins(username, bin):
     c.execute("DELETE FROM bin_dates_table WHERE bin = %s AND username = %s;", (bin, username))
     c.execute("DELETE FROM bins_table WHERE bin = %s AND username = %s;", (bin, username))
     conn.commit()
-    c.close()
 
 # Get ALL bins_table data 
 def view_all_bins_table_data():
