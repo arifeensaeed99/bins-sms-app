@@ -1,12 +1,9 @@
 import sqlite3
-import psycopg
-import os
-
-DATABASE_URL = os.environ.get('postgresql-concave-71120')
-conn = psycopg.connect(DATABASE_URL) 
+conn = sqlite3.connect("data.db")
 c = conn.cursor()
 
 # Database
+
 # c.execute('DROP TABLE users_bins_table')
 
     
