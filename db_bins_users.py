@@ -36,8 +36,7 @@ def view_all_bins_users():
 
 def update_bins_user_data(new_username, new_password, new_email, new_phone, new_carrier, new_timezone, username, password, email, phone, carrier, timezone):
     c.execute("UPDATE users_bins_table SET username = %s, password = %s, email = %s, phone = %s, carrier = %s, timezone = %s WHERE username = %s and password = %s and email = %s and phone = %s and carrier = %s and timezone = %s;", (new_username, new_password, new_email, new_phone, new_carrier, new_timezone, username, password, email, phone, carrier, timezone))
-    data = c.fetchall()
     
     conn.commit()
-    return data
+    
     
