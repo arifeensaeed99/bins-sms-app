@@ -1,12 +1,13 @@
 # Postgres data migration for LT storage
 # postgresql-concave-71120
 
-#import the relevant sql library 
+#import the relevant sql library
+import sqlalchemy 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 import os
 # link to your database
-engine = create_engine(os.getenv('postgresql-concave-71120'))
+engine = create_engine(os.getenv('postgres://kkrxhdcnukwpky:b00307276acd85718b22958bc86632f45018449551928445371c2e38c0d9b379@ec2-44-205-41-76.compute-1.amazonaws.com:5432/dciocdjj8v1tq5'))
 db = scoped_session(sessionmaker(bind = engine))
 # attach the data frame (df) to the database with a name of the 
 # table; the name can be whatever you like
@@ -50,7 +51,7 @@ def create_bins_dates_tables():
     db.execute('CREATE TABLE IF NOT EXISTS bin_dates_table(bin_datestamp DATE, bin_level INTEGER, username TEXT, bin TEXT, FOREIGN KEY(username, bin) REFERENCES bins_table(username, bin) ON UPDATE CASCADE)')
 
     db.commit()
-    
+
 # init for both at once
 def add_bin(username, bin, bin_datestamp, bin_level, bin_completion_date, bin_status):
     db.execute('INSERT INTO bins_table(username, bin, bin_completion_date, bin_status) VALUES (?,?,?,?)', (username, bin, bin_completion_date, bin_status))

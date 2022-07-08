@@ -21,6 +21,7 @@ entrypoints==0.4
 fastjsonschema==2.15.3
 gitdb==4.0.9
 GitPython==3.1.27
+greenlet==1.1.2
 idna==3.3
 importlib-metadata==4.12.0
 importlib-resources==5.8.0
@@ -76,6 +77,7 @@ Send2Trash==1.8.0
 six==1.16.0
 smmap==5.0.0
 soupsieve==2.3.2.post1
+SQLAlchemy==1.4.39
 streamlit==1.10.0
 tenacity==8.0.1
 terminado==0.15.0

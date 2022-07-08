@@ -2,11 +2,12 @@
 # postgresql-concave-71120
 
 #import the relevant sql library 
+import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 import os
 # link to your database
-engine = create_engine(os.getenv('postgresql-concave-71120'))
+engine = create_engine(os.getenv('postgres://kkrxhdcnukwpky:b00307276acd85718b22958bc86632f45018449551928445371c2e38c0d9b379@ec2-44-205-41-76.compute-1.amazonaws.com:5432/dciocdjj8v1tq5'))
 db = scoped_session(sessionmaker(bind = engine))
 # attach the data frame (df) to the database with a name of the 
 # table; the name can be whatever you like
@@ -41,7 +42,7 @@ def create_users_bins_table():
     db.execute('CREATE TABLE IF NOT EXISTS users_bins_table(username TEXT UNIQUE, password TEXT, email TEXT, phone TEXT UNIQUE, carrier TEXT, timezone TEXT)') # not null
 
     db.commit()
-    
+
 def add_users_bins_data(username, password, email, phone, carrier, timezone):
     db.execute('INSERT INTO users_bins_table(username, password, email, phone, carrier, timezone) VALUES (?,?,?,?,?, ?)', (username, password, email, phone, carrier, timezone))
     db.commit()
