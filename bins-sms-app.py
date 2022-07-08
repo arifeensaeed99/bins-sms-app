@@ -647,7 +647,7 @@ def main():
                         if email:
                             if email != result[0][2]:
                                 if '@' in email:
-                                    if email_provider_verifier(email) or is_uni_email(new_email):
+                                    if email_provider_verifier(email) or is_uni_email(email):
                                         st.success('New email looks good')
                                         new_email = email
                                     else:
@@ -706,7 +706,7 @@ def main():
                     new_carrier = result[0][4] # same as old carrier
 
                 st.write("------")
-                
+
 
                 # Timezone
                 if st.checkbox('Edit Timezone'):
