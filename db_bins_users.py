@@ -9,6 +9,7 @@ host = 'ec2-44-205-41-76.compute-1.amazonaws.com'
 port = '5432'
 database = 'dciocdjj8v1tq5'
 
+
 conn = psycopg2.connect(database=database, user=user, password=password, host = host, port = port)
 c = conn.cursor()
 

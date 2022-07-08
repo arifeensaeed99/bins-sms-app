@@ -502,7 +502,7 @@ def main():
                                         if confirm_password: 
                                                 if new_password == confirm_password:
                                                         st.success('Passwords match!')
-                                                        new_email = st.text_input('Email address')
+                                                        new_email = st.text_input('Email address (personal or school)')
                                                         if new_email: 
                                                             if '@' in new_email:
                                                                 if email_provider_verifier(new_email) or is_uni_email(new_email):
@@ -577,7 +577,8 @@ def main():
             if result:
                 # st.write(result)
 
-                st.warning("Please use the checkbox(es) below to edit the corresponding field(s) below, and leave checked until the button is pressed. Please only leave boxes checked if you have edits!:")
+                st.write("")
+                st.warning("Please use the checkbox(es) below to edit the corresponding field(s) below, and leave checked until the button is pressed. Please only leave boxes checked if you have edits - otherwise errors will occur/data wont be saved!:")
 
                 special_chars = {'~', ':', "'", '+', '[', '\\', '@', '^', '{', '%', '(', '-', '"', '*', '|', ',', '&', '<', '`', '}', '.', '_', '=', ']', '!', '>', ';', '?', '#', '$', ')', '/'}
 
@@ -652,7 +653,7 @@ def main():
                 # Email
                 if st.checkbox('Edit Email'):
                     # with st.expander('Email'):
-                        email = st.text_input('Please enter a new email', result[0][2])
+                        email = st.text_input('Please enter a new email (personal or school)', result[0][2])
                         if email:
                             if email != result[0][2]:
                                 if '@' in email:

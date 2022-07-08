@@ -12,13 +12,12 @@ database = 'dciocdjj8v1tq5'
 conn = psycopg2.connect(database=database, user=user, password=password, host = host, port = port)
 c = conn.cursor()
 
-
 conn.set_session(autocommit=True) # for errors
 
 # Table
 def create_bins_dates_tables():
     c.execute("CREATE TABLE IF NOT EXISTS bins_table(username TEXT, bin TEXT, bin_completion_date DATE, bin_status BOOL, CONSTRAINT user_bins_pk PRIMARY KEY (username, bin));") # removed date
-    c.execute("PRAGMA foreign_keys = ON;")
+    # c.execute("PRAGMA foreign_keys = ON;")
     c.execute("CREATE TABLE IF NOT EXISTS bin_dates_table(bin_datestamp DATE, bin_level INTEGER, username TEXT, bin TEXT, FOREIGN KEY(username, bin) REFERENCES bins_table(username, bin) ON UPDATE CASCADE);")
 
     conn.commit()
@@ -87,9 +86,9 @@ def get_bin_dates_data(bin, username):
 # only changing bin name, completion date, status (Details)
 def update_bin_details(new_bin, new_bin_completion_date, new_bin_status, username, bin):
     c.execute("UPDATE bins_table SET bin = %s, bin_completion_date = %s, bin_status = %s WHERE username = %s and bin = %s;", (new_bin, new_bin_completion_date, new_bin_status, username, bin))
-    data = c.fetchall()
+    # data = c.fetchall()
     conn.commit()
-    return data
+    # return data
 
 # delete all bin_dates and bin_details
 def delete_bins(username, bin):
