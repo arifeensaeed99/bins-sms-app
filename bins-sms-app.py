@@ -318,8 +318,8 @@ def main():
                                     st_datestamp = st.selectbox("What start date would you like to see from?", datestamp_options)
                                     end_datestamp = st.selectbox("What end date would you like to see until?", datestamp_options)
                                     bins = st.selectbox('Which Bin would you like to see?', bin_options) # removed multislect
-                                    if st_datestamp <= end_datestamp:
-                                        if bins:
+                                    if bins:
+                                        if st_datestamp <= end_datestamp:
                                             bins_df = bins_df[bins_df['Bin'].isin(bins)]
                                             bins_df = bins_df[bins_df[date_type]>=st_datestamp]
                                             bins_df = bins_df[bins_df[date_type]<=end_datestamp]
@@ -330,9 +330,10 @@ def main():
                                             fig.update_layout(width = 800)
                                             st.write(fig)
                                         else:
-                                            st.warning('Please choose a Bin') 
+                                            st.warning('Please ensure start date is before end date')
+                                            
                                     else:
-                                        st.warning('Please ensure start date is before end date')
+                                        st.warning('Please choose a Bin or ensure Bins are added') 
 
                                 elif activity == 'Add Bin':
                                     st.subheader('Add a New Bin')
