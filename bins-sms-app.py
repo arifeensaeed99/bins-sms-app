@@ -31,7 +31,7 @@ def text_alert(subject, body, num, carrier):
 
     pwd = "xixwajdiwsylryap" 
 
-    server = smtplib.SMTP("smtp.gmail.com", 465)
+    server = smtplib.SMTP("smtp.gmail.com", 587)
     server.starttls()
     server.login(user, pwd)
     server.send_message(msg)
