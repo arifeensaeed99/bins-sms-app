@@ -309,7 +309,7 @@ def main():
 
                                     bin_options = bins_df['Bin'].unique().tolist()
 
-                                    stamps = st.checkbox('Select this box if you want to see trends based on dates and timestamps. Otherwise, only dates will appear as options')
+                                    stamps = st.checkbox('Select this box if you want to see trends based on dates and date timestamps. Otherwise, only dates will appear as options')
                                     if stamps:
                                         date_type = 'Datestamp'
                                     else:
@@ -330,7 +330,7 @@ def main():
                                             fig.update_layout(width = 800)
                                             st.write(fig)
                                         else:
-                                            st.warning('Please ensure start date is before end date OR ensure dates from at least 2 different days are used')
+                                            st.warning('Please check a few things: 1) Ensure start date is before end date // 2) Ensure start date is not equal to end date // 3) Ensure dates chosen even exist for the given Bin')
                                             
                                     else:
                                         st.warning('Please choose a Bin or ensure Bins are added') 
