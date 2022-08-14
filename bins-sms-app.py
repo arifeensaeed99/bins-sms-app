@@ -370,6 +370,7 @@ def main():
                                 
                                 elif activity == 'Edit Bin Details':
                                     st.subheader("Edit a Bin's high level Details")
+                                    
 
                                     # result = view_all_bins_data(username)
 
