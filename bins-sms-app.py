@@ -302,14 +302,16 @@ def main():
                                     st.write("_More Levels data will smoothen the animation over time!_")
                                     res = get_all_bin_dates_data(username)
                                     bins_df = pd.DataFrame(res, columns = ['Bin', 'Datestamp', 'Level'])
-
+                                    
+                                    st.write(bins_df)
+                                    
                                     bins_df['Date'] = pd.to_datetime(bins_df['Datestamp']).dt.strftime('%Y-%m-%d')
 
                                     st.write(bins_df)
 
                                     bin_options = bins_df['Bin'].unique().tolist()
 
-                                    stamps = st.checkbox('Select this box if you want to see trends based on dates _and timestamps_. Otherwise, only dates will appear as options')
+                                    stamps = st.checkbox('Select this box if you want to see trends based on dates and timestamps. Otherwise, only dates will appear as options')
                                     if stamps:
                                         date_type = 'Datestamp'
                                     else:
