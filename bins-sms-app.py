@@ -26,10 +26,10 @@ def text_alert(subject, body, num, carrier):
     msg.set_content(body)
     msg['to'] = to_carrier_text_formatter(num, carrier)
 
-    user = "bins.sms.app@gmail.com" # Actual Gmail account (Bot)
+    user = "bins.sms.app.texts@gmail.com" # Actual Gmail account (Bot)
     msg['from'] = 'Bins SMS App' # replace to be = user?
 
-    pwd = "xixwajdiwsylryap" 
+    pwd =  "dujpxrtynoirmsmu"
 
     server = smtplib.SMTP("smtp.gmail.com", 587)
     server.starttls()
