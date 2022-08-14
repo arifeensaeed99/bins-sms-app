@@ -285,7 +285,7 @@ def main():
 
                                     for b in res:
                                         b = b[0]
-                                        st.markdown(b)
+                                        st.code(b)
                                         bin_level = st.slider("What Level do you feel like the Bin '{}' is at right now?".format(b), 0, 100)
 
                                         # UTC Heroku to local user timezone, Time Zone conversion here for closeness to true time
