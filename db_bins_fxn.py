@@ -15,10 +15,6 @@ c = conn.cursor()
 
 conn.set_session(autocommit=True) # for errors
 
-c.execute("DROP TABLE bin_dates_table;")
-c.execute("DROP TABLE bins_table;")
-c.commit()
-
 # Table
 def create_bins_dates_tables():
     c.execute("CREATE TABLE IF NOT EXISTS bins_table(username TEXT, bin TEXT, bin_completion_date TEXT, bin_status BOOL, CONSTRAINT user_bins_pk PRIMARY KEY (username, bin));") # removed date
