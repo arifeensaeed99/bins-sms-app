@@ -285,7 +285,7 @@ def main():
 
                                     for b in res:
                                         b = b[0]
-                                        st.latex(b)
+                                        st.markdown(b)
                                         bin_level = st.slider("What Level do you feel like the Bin '{}' is at right now?".format(b), 0, 100)
 
                                         # UTC Heroku to local user timezone, Time Zone conversion here for closeness to true time
@@ -401,8 +401,6 @@ def main():
                                         st.caption('Current ideal completion date: ' + str(bin_completion_date))
                                         new_bin_completion_date = st.date_input('What is the new ideal completion date of this Bin?')
 
-                                        st.write(new_bin_completion_date)
-
                                         # UTC Heroku to local user timezone, Time Zone conversion here for closeness to true time
                                         # new_bin_completion_date = strftime("%Y-%m-%d %H:%M:%S", localtime())  # UTC in Heroku
                                         
@@ -441,7 +439,7 @@ def main():
                                     delete_email = st.text_input("Begin deletion process by entering your account's associated email address:")
                                     if delete_email == str(result[0][2]): # matches email on hand for account
 
-                                        if st.checkbox('Are you sure you want to **PERMANENTLY** Delete ALL records of Bins with a Bin of ' + str(selected_bin) +"?"):
+                                        if st.checkbox('Are you sure you want to PERMANENTLY Delete ALL records of Bins with a Bin of ' + str(selected_bin) +"?"):
                                             
                                                 st.error("About to delete Bin with details of records: " + str(selected_bins_details))
                                                 st.error("About to delete associated Bin datestamps with records of: " + str(selected_bins_dates))
