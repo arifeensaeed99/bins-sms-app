@@ -303,7 +303,7 @@ def main():
                                     res = get_all_bin_dates_data(username)
                                     bins_df = pd.DataFrame(res, columns = ['Bin', 'Datestamp', 'Level'])
 
-                                    bins_df['Date'] = pd.to_datetime(bins_df['Datestamp']).dt.strptime('%Y-%m-%d')
+                                    bins_df['Date'] = pd.to_datetime(bins_df['Datestamp'], format = '%Y-%m-%d')
 
                                     st.write(bins_df)
 
