@@ -314,11 +314,11 @@ def main():
                                         date_type = 'Datestamp'
                                     else:
                                         date_type = 'Date'
-                                    datestamp_options = bins_df[date_type].unique().tolist()
                                     
                                     bin = st.selectbox('Which Bin would you like to see data of?', bin_options) # removed multislect
                                     if bin:
                                         bins_df = bins_df[bins_df['Bin']==bin]
+                                        datestamp_options = bins_df[date_type].unique().tolist()
 
                                         st_datestamp = st.selectbox("What start date would you like to see from?", datestamp_options)
                                         end_datestamp = st.selectbox("What end date would you like to see until?", datestamp_options)
