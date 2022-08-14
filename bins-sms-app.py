@@ -31,7 +31,7 @@ def text_alert(subject, body, num, carrier):
 
     pwd = "xixwajdiwsylryap" 
 
-    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server = smtplib.SMTP("smtp.gmail.com", 465)
     server.starttls()
     server.login(user, pwd)
     server.send_message(msg)
@@ -281,7 +281,7 @@ def main():
                                     
                                     st.warning("_**{}'s**_".format(weekday) + " be like: " + str(random.choice(emojis)))
 
-                                    st.write("_Try to do this **at least once a day** to accurately monitor your Levels over time._")
+                                    st.write("_Tip: Try to do this **at least once a day** to accurately monitor your Levels over time._")
 
                                     for b in res:
                                         b = b[0]
@@ -300,7 +300,7 @@ def main():
                                     # Animated Plot
                                     st.subheader('See an Animated Plot of your Bin Levels over time')
                                     st.info("Please choose a start date, end date, and Bin below. NOTE: If you get errors, make sure you choose proper start and end dates that the Bin exists in.")
-                                    st.write("_More Levels data will smoothen the animation over time!_")
+                                    st.write("_Note: More Levels data will smoothen the animation over time!_")
                                     res = get_all_bin_dates_data(username)
                                     bins_df = pd.DataFrame(res, columns = ['Bin', 'Datestamp', 'Level'])
 
@@ -671,7 +671,7 @@ def main():
                                 invalids += special_chars
                                 res = [i for i in invalids if(i in phone)]
                                 if not res:
-                                    st.success("New phone looks good")
+                                    st.success("New phone looks good, please ensure no other accounts have it")
                                     new_phone = phone
                                                                                 
                                 else:
