@@ -10,7 +10,7 @@ import hashlib
 import time
 import random
 import plotly.express as px
-from time import strftime, localtime, timezone # 
+from time import strftime, strptime, timezone # 
 import pytz
 
 import requests
@@ -289,7 +289,7 @@ def main():
                                         bin_level = st.slider("What Level do you feel like the Bin '{}' is at right now?".format(b), 0, 100)
 
                                         # UTC Heroku to local user timezone, Time Zone conversion here for closeness to true time
-                                        bin_datestamp = datetime.datetime.now(pytz.timezone(user_tz)).strftime("%Y-%m-%d %H:%M:%S")
+                                        bin_datestamp = datetime.datetime.now(pytz.timezone(user_tz)).strptime("%Y-%m-%d %H:%M:%S")
 
                                         if st.button('Add new Level data for {}'.format(b)):
                                             add_bin_dates(bin_datestamp, bin_level, username, b)
@@ -302,10 +302,8 @@ def main():
                                     st.write("_More Levels data will smoothen the animation over time!_")
                                     res = get_all_bin_dates_data(username)
                                     bins_df = pd.DataFrame(res, columns = ['Bin', 'Datestamp', 'Level'])
-                                    
-                                    st.write(bins_df)
-                                    
-                                    bins_df['Date'] = pd.to_datetime(bins_df['Datestamp']).dt.strftime('%Y-%m-%d')
+
+                                    bins_df['Date'] = pd.to_datetime(bins_df['Datestamp']).dt.strptime('%Y-%m-%d')
 
                                     st.write(bins_df)
 
@@ -323,8 +321,8 @@ def main():
                                     if bin:
                                         if st_datestamp <= end_datestamp:
                                             bins_df = bins_df[bins_df['Bin']==bin]
-                                            bins_df = bins_df[bins_df[date_type]>=st_datestamp]
-                                            bins_df = bins_df[bins_df[date_type]<=end_datestamp]
+                                            bins_df = bins_df[bins_df[date_type]>=datetime.datetime.strptime(st_datestamp, timezone = to_zone)]
+                                            bins_df = bins_df[bins_df[date_type]<=datetime.datetime.strptime(end_datestamp, timezone = to_zone)]
                                             fig = px.bar(bins_df, x  = "Bin", y = "Level", color = "Bin", range_y = [-10, 110], animation_frame = date_type, animation_group = 'Bin', range_x = [-len(bin),len(bin)*2])
                                             fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 200
                                             fig.layout.updatemenus[0].buttons[0].args[1]['transition']['duration'] = 200/6
@@ -343,7 +341,7 @@ def main():
                                     # Initial
 
                                     # UTC Heroku to local user timezone, Time Zone conversion here for closeness to true time
-                                    new_bin_date = datetime.datetime.now(pytz.timezone(user_tz)).strftime("%Y-%m-%d %H:%M:%S")
+                                    new_bin_date = datetime.datetime.now(pytz.timezone(user_tz)).strptime("%Y-%m-%d %H:%M:%S")
 
                                     display_bin_date =  datetime.datetime.now(pytz.timezone(user_tz)).strftime("%Y-%m-%d %I:%M:%S %p")
 
@@ -401,7 +399,7 @@ def main():
                                         # UTC Heroku to local user timezone, Time Zone conversion here for closeness to true time
                                         # new_bin_completion_date = strftime("%Y-%m-%d %H:%M:%S", localtime())  # UTC in Heroku
                                         
-                                        new_bin_completion_date = datetime.datetime.strftime(new_bin_completion_date, timezone = to_zone)                                      
+                                        new_bin_completion_date = datetime.datetime.strptime(new_bin_completion_date, timezone = to_zone)                                      
                                         
                                         if not bin_status:
                                             st.caption('Current Bin completion status: False')
