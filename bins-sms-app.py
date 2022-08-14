@@ -401,10 +401,12 @@ def main():
                                         st.caption('Current ideal completion date: ' + str(bin_completion_date))
                                         new_bin_completion_date = st.date_input('What is the new ideal completion date of this Bin?')
 
+                                        st.write(new_bin_completion_date)
+
                                         # UTC Heroku to local user timezone, Time Zone conversion here for closeness to true time
                                         # new_bin_completion_date = strftime("%Y-%m-%d %H:%M:%S", localtime())  # UTC in Heroku
                                         
-                                        new_bin_completion_date = datetime.datetime.strftime(new_bin_completion_date, timezone = to_zone)                                      
+                                        # new_bin_completion_date = datetime.datetime.strftime(new_bin_completion_date, timezone = to_zone)                                      
                                         
                                         if not bin_status:
                                             st.caption('Current Bin completion status: False')
