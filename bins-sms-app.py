@@ -10,7 +10,7 @@ import hashlib
 import time
 import random
 import plotly.express as px
-from time import strftime, localtime # 
+from time import strftime, localtime, timezone # 
 import pytz
 
 import requests
@@ -175,13 +175,13 @@ def main():
                         to_zone = pytz.timezone(user_tz)
 
                         # Dates (UTC Heroku -> user timezone) throughout app session
-                        year = datetime.date.today().strftime("%Y").replace(tzinfo=to_zone)
+                        year = datetime.datetime.now(pytz.timezone(user_tz)).strftime("%Y")
 
-                        month = datetime.date.today().strftime("%B").replace(tzinfo=to_zone)
+                        month = datetime.datetime.now(pytz.timezone(user_tz)).strftime("%B")
 
-                        day = datetime.date.today().strftime("%d").replace(tzinfo=to_zone)
+                        day = datetime.datetime.now(pytz.timezone(user_tz)).strftime("%d")
 
-                        weekday = datetime.date.today().strftime("%A").replace(tzinfo=to_zone) 
+                        weekday = datetime.datetime.now(pytz.timezone(user_tz)).strftime("%A")
 
                         ending = ''
                         if int(day) < 10:
@@ -241,7 +241,7 @@ def main():
                                         st.info('Sending Bins Average Levels Report text message to ' + str(result[0][3]) + '...')
                                         
                                         # Time Zone conversion here for closeness to true time
-                                        user_time = strftime("%m/%d/%Y at %I:%M:%S %p", localtime()).replace(tzinfo=to_zone)
+                                        user_time = datetime.datetime.now(pytz.timezone(user_tz)).strftime("%m/%d/%Y at %I:%M:%S %p")
 
                                         text_alert('📊 Latest Bins 3 Levels Report for ' + str(result[0][0]) + ",  " + str(user_time)  +  ":", body, result[0][3], result[0][4])
                                         
@@ -289,7 +289,7 @@ def main():
                                         bin_level = st.slider("What Level do you feel like the Bin '{}' is at right now?".format(b), 0, 100)
 
                                         # UTC Heroku to local user timezone, Time Zone conversion here for closeness to true time
-                                        bin_datestamp = strftime("%Y-%m-%d %H:%M:%S", localtime()).replace(tzinfo=to_zone)
+                                        bin_datestamp = datetime.datetime.now(pytz.timezone(user_tz)).strftime("%Y-%m-%d %H:%M:%S")
 
                                         if st.button('Add new Level data for {}'.format(b)):
                                             add_bin_dates(bin_datestamp, bin_level, username, b)
@@ -340,9 +340,9 @@ def main():
                                     # Initial
 
                                     # UTC Heroku to local user timezone, Time Zone conversion here for closeness to true time
-                                    new_bin_date = strftime("%Y-%m-%d %H:%M:%S", localtime()).replace(tzinfo=to_zone) # .replace(tzinfo=pytz.utc).astimezone(to_zone)
+                                    new_bin_date = datetime.datetime.now(pytz.timezone(user_tz)).strftime("%Y-%m-%d %H:%M:%S")
 
-                                    display_bin_date = strftime("%Y-%m-%d %I:%M:%S %p", localtime()).replace(tzinfo=to_zone)
+                                    display_bin_date =  datetime.datetime.now(pytz.timezone(user_tz)).strftime("%Y-%m-%d %I:%M:%S %p")
 
                                     st.write('New Bin initial datestamp:', display_bin_date)
                                     new_bin_status = False 
@@ -396,7 +396,8 @@ def main():
 
                                         # UTC Heroku to local user timezone, Time Zone conversion here for closeness to true time
                                         # new_bin_completion_date = strftime("%Y-%m-%d %H:%M:%S", localtime())  # UTC in Heroku
-                                        new_bin_completion_date = new_bin_completion_date.replace(tzinfo=to_zone)
+                                        
+                                        new_bin_completion_date = datetime.datetime.strftime(new_bin_completion_date, timezone = to_zone)                                      
                                         
                                         if not bin_status:
                                             st.caption('Current Bin completion status: False')
@@ -407,7 +408,7 @@ def main():
                                         if new_bin:
                                             
                                             # UTC Heroku to local user timezone, Time Zone conversion here for closeness to true time
-                                            current_datetime = strftime("%Y-%m-%d %H:%M:%S", localtime()).replace(tzinfo=to_zone)
+                                            current_datetime = datetime.datetime.now(pytz.timezone(user_tz)).strftime("%Y-%m-%d %H:%M:%S")
 
                                             if str(new_bin_completion_date) > current_datetime:
                                                         if st.button('Update Bin Details'):
