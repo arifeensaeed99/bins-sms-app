@@ -294,11 +294,12 @@ def main():
                                         if st.button('Add new Level data for {}'.format(b)):
                                             add_bin_dates(bin_datestamp, bin_level, username, b)
                                             st.success('Added Level data for Bin "{}" '.format(b) + str(random.choice(emojis))) # add machine learning later for proper emoji to use
-                                
+                                        st.markdown('##')
+
                                 elif activity == "See Trends":
                                     # Animated Plot
                                     st.subheader('See an Animated Plot of your Bin Levels over time')
-                                    st.info("Please choose a start date, end date, and Bin below. NOTE: If you get errors, make sure you choose **proper** start and end dates that the Bin exists in.")
+                                    st.info("Please choose a start date, end date, and Bin below. NOTE: If you get errors, make sure you choose proper start and end dates that the Bin exists in.")
                                     st.write("_More Levels data will smoothen the animation over time!_")
                                     res = get_all_bin_dates_data(username)
                                     bins_df = pd.DataFrame(res, columns = ['Bin', 'Datestamp', 'Level'])
