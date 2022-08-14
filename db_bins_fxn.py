@@ -15,11 +15,15 @@ c = conn.cursor()
 
 conn.set_session(autocommit=True) # for errors
 
+c.execute("DROP TABLE bin_dates_table;")
+c.execute("DROP TABLE bins_table;")
+c.commit()
+
 # Table
 def create_bins_dates_tables():
-    c.execute("CREATE TABLE IF NOT EXISTS bins_table(username TEXT, bin TEXT, bin_completion_date DATE, bin_status BOOL, CONSTRAINT user_bins_pk PRIMARY KEY (username, bin));") # removed date
+    c.execute("CREATE TABLE IF NOT EXISTS bins_table(username TEXT, bin TEXT, bin_completion_date TEXT, bin_status BOOL, CONSTRAINT user_bins_pk PRIMARY KEY (username, bin));") # removed date
     # c.execute("PRAGMA foreign_keys = ON;")
-    c.execute("CREATE TABLE IF NOT EXISTS bin_dates_table(bin_datestamp DATE, bin_level INTEGER, username TEXT, bin TEXT, FOREIGN KEY(username, bin) REFERENCES bins_table(username, bin) ON UPDATE CASCADE);")
+    c.execute("CREATE TABLE IF NOT EXISTS bin_dates_table(bin_datestamp TEXT, bin_level INTEGER, username TEXT, bin TEXT, FOREIGN KEY(username, bin) REFERENCES bins_table(username, bin) ON UPDATE CASCADE);")
 
     conn.commit()
 
