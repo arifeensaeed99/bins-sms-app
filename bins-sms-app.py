@@ -315,12 +315,16 @@ def main():
                                     else:
                                         date_type = 'Date'
                                     datestamp_options = bins_df[date_type].unique().tolist()
-                                    st_datestamp = st.selectbox("What start date would you like to see from?", datestamp_options)
-                                    end_datestamp = st.selectbox("What end date would you like to see until?", datestamp_options)
+                                    
                                     bin = st.selectbox('Which Bin would you like to see data of?', bin_options) # removed multislect
                                     if bin:
+                                        bins_df = bins_df[bins_df['Bin']==bin]
+
+                                        st_datestamp = st.selectbox("What start date would you like to see from?", datestamp_options)
+                                        end_datestamp = st.selectbox("What end date would you like to see until?", datestamp_options)
+
                                         if st_datestamp < end_datestamp:
-                                            bins_df = bins_df[bins_df['Bin']==bin]
+                                            
                                             bins_df = bins_df[bins_df[date_type]>=st_datestamp]
                                             bins_df = bins_df[bins_df[date_type]<=end_datestamp]
                                             fig = px.bar(bins_df, x  = "Bin", y = "Level", color = "Bin", range_y = [-10, 110], animation_frame = date_type, animation_group = 'Bin', range_x = [-len(bin),len(bin)*2])
@@ -330,7 +334,7 @@ def main():
                                             fig.update_layout(width = 800)
                                             st.write(fig)
                                         else:
-                                            st.warning('Please check a few things: 1) Ensure start date is before end date // 2) Ensure start date is not equal to end date // 3) Ensure dates chosen even exist for the given Bin')
+                                            st.warning('Please ensure start date is before end date')
                                             
                                     else:
                                         st.warning('Please choose a Bin or ensure Bins are added') 
