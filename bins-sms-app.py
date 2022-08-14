@@ -305,7 +305,7 @@ def main():
 
                                     bins_df['Date'] = pd.to_datetime(bins_df['Datestamp']).dt.strftime('%Y-%m-%d')
 
-                                    st.write(bins_df)
+                                    # st.write(bins_df)
 
                                     bin_options = bins_df['Bin'].unique().tolist()
 
@@ -321,8 +321,8 @@ def main():
                                     if bin:
                                         if st_datestamp <= end_datestamp:
                                             bins_df = bins_df[bins_df['Bin']==bin]
-                                            bins_df = bins_df[bins_df[date_type]>=datetime.datetime.strftime(st_datestamp, timezone = to_zone)]
-                                            bins_df = bins_df[bins_df[date_type]<=datetime.datetime.strftime(end_datestamp, timezone = to_zone)]
+                                            bins_df = bins_df[bins_df[date_type]>=st_datestamp]
+                                            bins_df = bins_df[bins_df[date_type]<=end_datestamp]
                                             fig = px.bar(bins_df, x  = "Bin", y = "Level", color = "Bin", range_y = [-10, 110], animation_frame = date_type, animation_group = 'Bin', range_x = [-len(bin),len(bin)*2])
                                             fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 200
                                             fig.layout.updatemenus[0].buttons[0].args[1]['transition']['duration'] = 200/6
