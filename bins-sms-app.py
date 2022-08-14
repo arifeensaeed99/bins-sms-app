@@ -317,7 +317,7 @@ def main():
                                     datestamp_options = bins_df[date_type].unique().tolist()
                                     st_datestamp = st.selectbox("What start date would you like to see from?", datestamp_options)
                                     end_datestamp = st.selectbox("What end date would you like to see until?", datestamp_options)
-                                    bins = st.select('Which Bin would you like to see?', bin_options) # removed multislect
+                                    bins = st.selectbox('Which Bin would you like to see?', bin_options) # removed multislect
                                     if st_datestamp <= end_datestamp:
                                         if bins:
                                             bins_df = bins_df[bins_df['Bin'].isin(bins)]
@@ -370,7 +370,7 @@ def main():
                                 
                                 elif activity == 'Edit Bin Details':
                                     st.subheader("Edit a Bin's high level Details")
-                                    
+
 
                                     # result = view_all_bins_data(username)
 
