@@ -3,11 +3,11 @@
 #import the relevant libraries
 import psycopg2
 
-user = 'qphvgkskvrwwql'
-password = '8d20bbb2008f3855d9f37e9d3e323a737b71d2796f7f1993acf522f453ce15f9'
-host = 'ec2-3-229-161-70.compute-1.amazonaws.com'
+user = 'amkavsiwhrpuff'
+password = 'dfc2af07630443fdd423355f835fd4aaf2b5a694c0153f491e07e46b68d0c43d'
+host = 'ec2-34-233-115-14.compute-1.amazonaws.com'
 port = '5432'
-database = 'dusjopfqeo6cn'
+database = 'd7u8jc37efakn1'
 
 conn = psycopg2.connect(database=database, user=user, password=password, host = host, port = port)
 c = conn.cursor()
