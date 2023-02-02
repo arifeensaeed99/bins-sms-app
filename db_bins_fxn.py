@@ -13,6 +13,7 @@ conn = psycopg2.connect(database=database, user=user, password=password, host = 
 c = conn.cursor()
 
 
+
 conn.set_session(autocommit=True) # for errors
 
 # Table
