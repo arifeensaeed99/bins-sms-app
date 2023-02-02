@@ -22,6 +22,7 @@ def create_users_bins_table():
     except:
         conn = psycopg2.connect(database=database, user=user, password=password, host = host, port = port)
         c = conn.cursor()
+        create_users_bins_table()
 
 def add_users_bins_data(username, password, email, phone, carrier, timezone):
     c.execute("INSERT INTO users_bins_table(username, password, email, phone, carrier, timezone) VALUES (%s,%s, %s, %s, %s, %s);", (username, password, email, phone, carrier, timezone,))
